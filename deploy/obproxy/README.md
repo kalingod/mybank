@@ -48,10 +48,17 @@ From the repo root:
 ALIPAY_TENANT_PASSWORD='<ALIPAY_TENANT_PASSWORD>' scripts/check-obproxy.sh
 ```
 
+Run a repeatable load test:
+
+```bash
+ALIPAY_TENANT_PASSWORD='<ALIPAY_TENANT_PASSWORD>' scripts/loadtest-obproxy.sh
+```
+
 Current smoke verification performed on 2026-05-25:
 
 - `10.190.49.117:2883` and `10.190.14.135:2883` both connected to `alipay_tenant`.
 - A write through exp4 OBProxy was read back through exp6 OBProxy.
+- Load test notes are in `deploy/obproxy/loadtest-2026-05-25.md`.
 
 ## Runtime notes
 
