@@ -17,6 +17,15 @@ obclient -h10.190.0.81 -P2881 -uroot@sys -p'<OB_SYS_PASSWORD>' -Doceanbase -A
 obclient -h10.190.0.81 -P2881 -uroot@alipay_tenant -p'<ALIPAY_TENANT_PASSWORD>' -D alipay_demo -A
 ```
 
+Application services should connect through OBProxy after it is deployed:
+
+```bash
+mysql -h10.190.49.117 -P2883 -uroot@alipay_tenant#alipay-ob -p'<ALIPAY_TENANT_PASSWORD>' -D alipay_demo -A
+mysql -h10.190.14.135 -P2883 -uroot@alipay_tenant#alipay-ob -p'<ALIPAY_TENANT_PASSWORD>' -D alipay_demo -A
+```
+
+See `deploy/obproxy/README.md` for the OBProxy topology and deployment commands.
+
 obshell dashboard:
 
 ```text

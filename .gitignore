@@ -1,3 +1,5 @@
 deploy/oceanbase/*.local.yaml
 deploy/oceanbase/*.runtime.yaml
 deploy/oceanbase/*.runtime.sql
+deploy/obproxy/*.local.yaml
+deploy/obproxy/*.runtime.yaml

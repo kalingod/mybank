@@ -1,0 +1,22 @@
+user:
+  username: root
+  key_file: /root/.ssh/id_ed25519
+  port: 22
+  timeout: 30
+
+obproxy-ce:
+  version: 4.3.5.0
+  servers:
+    - 10.190.49.117
+    - 10.190.14.135
+  global:
+    listen_port: 2883
+    prometheus_listen_port: 2884
+    home_path: /data/obproxy
+    rs_list: 10.190.0.81:2881;10.190.5.111:2881;10.190.5.65:2881
+    enable_cluster_checkout: false
+    cluster_name: alipay-ob
+    skip_proxy_sys_private_check: true
+    enable_strict_kernel_release: false
+    obproxy_sys_password: <OBPROXY_SYS_PASSWORD>
+    observer_sys_password: <OB_PROXYRO_PASSWORD>

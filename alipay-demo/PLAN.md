@@ -11,6 +11,8 @@
 | OBD 控制机 / OBServer | exp2 | 10.190.0.81 | zone1 | 复用已部署测试服务所在机器 |
 | OBServer | exp3 | 10.190.5.111 | zone2 | 同子网，300G overlay |
 | OBServer | exp5 | 10.190.5.65 | zone3 | 同子网，100G overlay |
+| OBProxy | exp4 | 10.190.49.117 | - | 应用优先连接入口 |
+| OBProxy | exp6 | 10.190.14.135 | - | 应用优先连接入口 |
 
 当前连接信息：
 
@@ -21,7 +23,8 @@
 | sys 租户 | `root@sys` / `<OB_SYS_PASSWORD>` |
 | 业务租户 | `root@alipay_tenant` / `<ALIPAY_TENANT_PASSWORD>` |
 | 业务库 | `alipay_demo` |
-| MySQL 协议入口 | `10.190.0.81:2881` |
+| MySQL 协议入口 | `10.190.49.117:2883`、`10.190.14.135:2883`（OBProxy） |
+| OBServer 直连入口 | `10.190.0.81:2881`、`10.190.5.111:2881`、`10.190.5.65:2881` |
 | obshell | `http://10.190.0.81:2886` |
 
 部署文件已落在仓库：
@@ -31,7 +34,19 @@ deploy/oceanbase/alipay-ob.yaml
 deploy/oceanbase/init-alipay.sql
 deploy/oceanbase/schema-alipay.sql
 deploy/oceanbase/README.md
+deploy/obproxy/obproxy.yaml
+deploy/obproxy/README.md
+deploy/git/README.md
 scripts/check-oceanbase.sh
+scripts/check-obproxy.sh
+```
+
+应用层不要固定写死某台 OBServer。后端连接串先使用 OBProxy：
+
+```text
+jdbc:mysql://10.190.49.117:2883,10.190.14.135:2883/alipay_demo
+user=root@alipay_tenant#alipay-ob
+password=<ALIPAY_TENANT_PASSWORD>
 ```
 
 容器环境限制：
