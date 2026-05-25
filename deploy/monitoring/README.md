@@ -13,7 +13,7 @@ From the Mac worktree:
 
 ```bash
 python3 scripts/lab-monitor.py --via exp2 --interval 2 --samples 5
-python3 scripts/lab-monitor-web.py --via exp2 --host 127.0.0.1 --port 18080
+python3 scripts/lab-monitor-web.py --via exp2 --host 127.0.0.1 --port 18081
 ```
 
 From exp2:
@@ -30,6 +30,47 @@ The web page exposes:
 /
 /api/snapshot
 ```
+
+## macOS autostart
+
+Install the local LaunchAgent from the Mac worktree:
+
+```bash
+scripts/install-lab-monitor-launchd.sh
+```
+
+This starts the dashboard at:
+
+```text
+http://127.0.0.1:18081/
+```
+
+Useful commands:
+
+```bash
+launchctl print gui/$(id -u)/com.mybank.lab-monitor
+launchctl kickstart -k gui/$(id -u)/com.mybank.lab-monitor
+launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/com.mybank.lab-monitor.plist
+tail -f ~/Library/Logs/mybank-lab-monitor.err.log
+```
+
+## Rebuild recovery
+
+If the webide containers are rebuilt, container-local state such as `/root/.ssh`, `/data`, OBD runtime files, and manually installed packages may be lost. Recover the monitoring access path from the Mac:
+
+```bash
+scripts/recover-lab-environment.sh
+```
+
+The script:
+
+- ensures exp2 has a root SSH key for monitoring;
+- distributes exp2's public key to exp1-exp6;
+- verifies exp2 can SSH to every container by IP;
+- recreates `/home/workspace/git/mybank.git` if missing;
+- fast-forwards `/home/workspace/mybank` from the internal bare repo.
+
+The script does not store private keys in this repository.
 
 Current page nodes:
 
