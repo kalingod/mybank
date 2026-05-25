@@ -1,0 +1,52 @@
+user:
+  username: root
+  key_file: /root/.ssh/id_ed25519
+  port: 22
+  timeout: 30
+
+oceanbase-ce:
+  version: 4.5.0.0
+  servers:
+    - name: exp2
+      ip: 10.190.0.81
+    - name: exp3
+      ip: 10.190.5.111
+    - name: exp5
+      ip: 10.190.5.65
+  global:
+    cluster_id: 1001
+    memory_limit: 10G
+    system_memory: 2G
+    datafile_size: 20G
+    datafile_next: 2G
+    datafile_maxsize: 40G
+    log_disk_size: 14G
+    cpu_count: 8
+    production_mode: false
+    enable_syslog_wf: false
+    max_syslog_file_count: 4
+    root_password: <OB_SYS_PASSWORD>
+  exp2:
+    mysql_port: 2881
+    rpc_port: 2882
+    obshell_port: 2886
+    home_path: /data/oceanbase/observer
+    data_dir: /data/oceanbase/store
+    redo_dir: /data/oceanbase/redo
+    zone: zone1
+  exp3:
+    mysql_port: 2881
+    rpc_port: 2882
+    obshell_port: 2886
+    home_path: /data/oceanbase/observer
+    data_dir: /data/oceanbase/store
+    redo_dir: /data/oceanbase/redo
+    zone: zone2
+  exp5:
+    mysql_port: 2881
+    rpc_port: 2882
+    obshell_port: 2886
+    home_path: /data/oceanbase/observer
+    data_dir: /data/oceanbase/store
+    redo_dir: /data/oceanbase/redo
+    zone: zone3

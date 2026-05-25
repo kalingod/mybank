@@ -1,0 +1,3 @@
+deploy/oceanbase/*.local.yaml
+deploy/oceanbase/*.runtime.yaml
+deploy/oceanbase/*.runtime.sql

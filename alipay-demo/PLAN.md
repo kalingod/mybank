@@ -2,7 +2,47 @@
 
 ---
 
-## 本机硬件信息
+## 当前执行基线（2026-05-25）
+
+本次 demo 已从“本地 Docker 单节点”调整为 `webide_server` 实验机上的 **OBD 三节点 OceanBase CE 集群**。旧的 Docker 单节点方案只适合快速体验，不能验证高可用；当前硬件条件更适合直接验证 OceanBase 三副本。
+
+| 角色 | 机器 | IP | Zone | 说明 |
+|------|------|------|------|------|
+| OBD 控制机 / OBServer | exp2 | 10.190.0.81 | zone1 | 复用已部署测试服务所在机器 |
+| OBServer | exp3 | 10.190.5.111 | zone2 | 同子网，300G overlay |
+| OBServer | exp5 | 10.190.5.65 | zone3 | 同子网，100G overlay |
+
+当前连接信息：
+
+| 项目 | 值 |
+|------|-----|
+| OceanBase 版本 | OceanBase CE 4.5.0.0 |
+| 集群名 | alipay-ob |
+| sys 租户 | `root@sys` / `<OB_SYS_PASSWORD>` |
+| 业务租户 | `root@alipay_tenant` / `<ALIPAY_TENANT_PASSWORD>` |
+| 业务库 | `alipay_demo` |
+| MySQL 协议入口 | `10.190.0.81:2881` |
+| obshell | `http://10.190.0.81:2886` |
+
+部署文件已落在仓库：
+
+```text
+deploy/oceanbase/alipay-ob.yaml
+deploy/oceanbase/init-alipay.sql
+deploy/oceanbase/schema-alipay.sql
+deploy/oceanbase/README.md
+scripts/check-oceanbase.sh
+```
+
+容器环境限制：
+
+- `vm.max_map_count`、`vm.overcommit_memory`、`net.core.somaxconn` 在容器内只读，只能带告警运行。
+- `nofile` 已通过 `/etc/security/limits.d/99-obd-nofile.conf` 调到 65535。
+- OceanBase 数据目录使用本地 overlay `/data/oceanbase`，不放在共享 OrangeFS `/home/workspace`。
+
+---
+
+## 旧本机硬件信息（已不作为当前部署基线）
 
 | 组件 | 配置 |
 |------|------|
@@ -60,8 +100,8 @@ docker run -d \
   -p 2881:2881 \
   -p 2886:2886 \
   -e MODE=NORMAL \
-  -e OB_SYS_PASSWORD=Root123456 \
-  -e OB_TENANT_PASSWORD=Demo123456 \
+  -e OB_SYS_PASSWORD=<OB_SYS_PASSWORD> \
+  -e OB_TENANT_PASSWORD=<ALIPAY_TENANT_PASSWORD> \
   oceanbase/oceanbase-ce
 
 # 等待 2~5 分钟，查看是否启动成功
@@ -141,7 +181,7 @@ CREATE DATABASE alipay_demo;
 | Host | 192.168.0.105 |
 | Port | 2881 |
 | 用户 | root@alipay_tenant |
-| 密码 | Demo123456 |
+| 密码 | <ALIPAY_TENANT_PASSWORD> |
 | 数据库 | alipay_demo |
 
 ---
@@ -250,7 +290,7 @@ spring:
   datasource:
     url: jdbc:mysql://192.168.0.105:2881/alipay_demo?useSSL=false&serverTimezone=Asia/Shanghai
     username: root@alipay_tenant
-    password: Demo123456
+    password: <ALIPAY_TENANT_PASSWORD>
     driver-class-name: com.mysql.cj.jdbc.Driver
 ```
 
@@ -442,8 +482,8 @@ docker pull oceanbase/oceanbase-ce
 docker run -d --name oceanbase-ce \
   -p 2881:2881 -p 2886:2886 \
   -e MODE=NORMAL \
-  -e OB_SYS_PASSWORD=Root123456 \
-  -e OB_TENANT_PASSWORD=Demo123456 \
+  -e OB_SYS_PASSWORD=<OB_SYS_PASSWORD> \
+  -e OB_TENANT_PASSWORD=<ALIPAY_TENANT_PASSWORD> \
   oceanbase/oceanbase-ce
 
 # 等待启动（2~5分钟）
@@ -454,7 +494,7 @@ docker logs -f oceanbase-ce
 ### Step 2：初始化数据库
 
 ```bash
-docker exec -it oceanbase-ce obclient -h127.0.0.1 -P2881 -uroot@sys -pRoot123456
+docker exec -it oceanbase-ce obclient -h127.0.0.1 -P2881 -uroot@sys -p<OB_SYS_PASSWORD>
 ```
 
 执行创建租户和库的 SQL（见第一章）。
