@@ -19,7 +19,7 @@ From exp2:
 
 ```bash
 cd /home/workspace/mybank
-python3 scripts/lab-monitor.py --interval 2 --samples 5
+python3 scripts/lab-monitor.py --direct-ip --interval 2 --samples 5
 ```
 
 Key columns:

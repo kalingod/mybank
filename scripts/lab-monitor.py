@@ -249,6 +249,22 @@ def ssh_command(node: Node, args: argparse.Namespace) -> list[str]:
             node.alias,
             node.role,
         ]
+    if args.direct_ip:
+        return [
+            "ssh",
+            "-T",
+            "-o",
+            "StrictHostKeyChecking=no",
+            "-i",
+            args.identity,
+            f"root@{node.ip}",
+            "bash",
+            "-s",
+            "--",
+            str(args.interval),
+            node.alias,
+            node.role,
+        ]
     return [
         "ssh",
         "-T",
@@ -332,6 +348,11 @@ def main() -> int:
         "--identity",
         default="/root/.ssh/id_ed25519",
         help="SSH identity path used on --via host.",
+    )
+    parser.add_argument(
+        "--direct-ip",
+        action="store_true",
+        help="Connect directly to root@node-ip instead of using local SSH aliases.",
     )
     parser.add_argument("--timeout", type=float, default=8.0, help="Extra SSH timeout seconds.")
     args = parser.parse_args()
