@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 import argparse
 import concurrent.futures
 import subprocess
@@ -14,10 +16,11 @@ class Node:
 
 
 NODES = (
+    Node("exp1", "10.190.40.174", "spare"),
     Node("exp2", "10.190.0.81", "observer"),
     Node("exp3", "10.190.5.111", "observer"),
-    Node("exp5", "10.190.5.65", "observer"),
     Node("exp4", "10.190.49.117", "obproxy"),
+    Node("exp5", "10.190.5.65", "observer"),
     Node("exp6", "10.190.14.135", "obproxy"),
 )
 
@@ -145,7 +148,10 @@ read -r total_after idle_after <<<"$cpu_after"
 read -r throttled_before throttled_time_before <<<"$stat_before"
 read -r throttled_after throttled_time_after <<<"$stat_after"
 
-df_line="$(df -Pm /data 2>/dev/null | awk 'NR==2 {gsub(/%/, "", $5); print $3, $4, $5}')"
+df_line="$((df -Pm /data 2>/dev/null || true) | awk 'NR==2 {gsub(/%/, "", $5); print $3, $4, $5}')"
+if [ -z "$df_line" ]; then
+  df_line="$((df -Pm / 2>/dev/null || true) | awk 'NR==2 {gsub(/%/, "", $5); print $3, $4, $5}')"
+fi
 if [ -z "$df_line" ]; then
   df_line="0 0 0"
 fi

@@ -13,6 +13,7 @@ From the Mac worktree:
 
 ```bash
 python3 scripts/lab-monitor.py --via exp2 --interval 2 --samples 5
+python3 scripts/lab-monitor-web.py --via exp2 --host 127.0.0.1 --port 18080
 ```
 
 From exp2:
@@ -20,7 +21,26 @@ From exp2:
 ```bash
 cd /home/workspace/mybank
 python3 scripts/lab-monitor.py --direct-ip --interval 2 --samples 5
+python3 scripts/lab-monitor-web.py --direct-ip --host 0.0.0.0 --port 18080
 ```
+
+The web page exposes:
+
+```text
+/
+/api/snapshot
+```
+
+Current page nodes:
+
+| Node | IP | Role |
+|---|---:|---|
+| exp1 | 10.190.40.174 | spare |
+| exp2 | 10.190.0.81 | observer |
+| exp3 | 10.190.5.111 | observer |
+| exp4 | 10.190.49.117 | obproxy |
+| exp5 | 10.190.5.65 | observer |
+| exp6 | 10.190.14.135 | obproxy |
 
 Key columns:
 
