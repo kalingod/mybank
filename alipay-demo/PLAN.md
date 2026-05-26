@@ -41,6 +41,12 @@ scripts/check-oceanbase.sh
 scripts/check-obproxy.sh
 ```
 
+完整实施级技术方案见：
+
+```text
+docs/TECHNICAL_SOLUTION.md
+```
+
 应用层不要固定写死某台 OBServer。后端连接串先使用 OBProxy：
 
 ```text
